@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MZ5 Digital — Marketing Site
 
-## Getting Started
+Modern dark-theme agency site built with **Next.js**, **Tailwind CSS**, and **Framer Motion**.
 
-First, run the development server:
+## Stack
+
+- Next.js 16 (App Router)
+- Tailwind CSS v4
+- Framer Motion
+- Space Grotesk + Instrument Serif (accent italics)
+- Lucide icons
+
+## Getting started
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+├── app/
+│   ├── page.tsx                 # Home
+│   └── services/
+│       ├── branding/
+│       ├── web-development/
+│       ├── seo/
+│       └── ppc/
+├── components/
+│   ├── layout/                  # Header, Footer, dropdown, mobile nav
+│   ├── sections/                # Hero, Services, Process, About, Contact
+│   ├── services/                # Service page template
+│   ├── ui/                      # Button, Logo, cards, headings
+│   └── motion/                  # Scroll reveal animations
+└── lib/site.ts                  # Content & navigation data
+```
 
-## Learn More
+## Contact form emails
 
-To learn more about Next.js, take a look at the following resources:
+Submissions are sent via [Resend](https://resend.com) to `muhammad.fahim@mz5digital.com`, with a branded confirmation email to the visitor.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Copy `.env.example` to `.env.local`
+2. Add your `RESEND_API_KEY` from [resend.com/api-keys](https://resend.com/api-keys)
+3. Until `mz5digital.com` is verified in Resend, use `onboarding@resend.dev` as the sender
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+cp .env.example .env.local
+```
 
-## Deploy on Vercel
+## Customize
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Copy & stats:** `src/lib/site.ts`
+- **Logo:** replace `public/logo.png`
+- **Colors:** CSS variables in `src/app/globals.css`
