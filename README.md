@@ -19,6 +19,10 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
+## Deploy to Cloudflare
+
+See **[CLOUDFLARE.md](./CLOUDFLARE.md)** for Pages/Workers setup. Use `npm run pages:build` (not `dist`) and add `RESEND_API_KEY` in the dashboard.
+
 ## Project structure
 
 ```
