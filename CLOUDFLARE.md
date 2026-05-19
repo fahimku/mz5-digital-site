@@ -1,39 +1,64 @@
 # Deploy MZ5 Digital to Cloudflare
 
-This project uses **@opennextjs/cloudflare** (not a static `dist` folder). The contact form API (`/api/contact`) needs Workers — static export will not work.
+## Why you see a 404 on `*.pages.dev`
 
-## Cloudflare Pages (GitHub) — recommended settings
+`npm run pages:build` **only compiles** the app into `.open-next/` — it does **not** publish anything to Cloudflare.  
+With an empty output directory, Pages has **no files to serve** → 404.
 
-In **Workers & Pages** → your project → **Settings** → **Build**:
+You must run the **deploy** step (`opennextjs-cloudflare deploy`) so the Worker goes live.
+
+---
+
+## Fix in Cloudflare dashboard (GitHub deploy)
+
+Open **Workers & Pages** → **mz5-digital-site** → **Settings** → **Build**
+
+### Option A — One command (easiest)
 
 | Setting | Value |
 |---------|--------|
-| **Framework preset** | None |
-| **Build command** | `npm run pages:build` |
-| **Build output directory** | *(leave empty)* |
+| **Build command** | `npm run deploy` |
+| **Deploy command** | *(leave empty if not shown)* |
+| **Build output directory** | *(empty — delete `dist`)* |
 | **Root directory** | `/` |
 
-> **Important:** Remove `dist` from the output directory. That caused the `Output directory "dist" not found` error.
+### Option B — Build + deploy (Workers Builds)
 
-### Environment variables
+| Setting | Value |
+|---------|--------|
+| **Build command** | `npm run pages:build` |
+| **Deploy command** | `npm run cf:deploy` |
+| **Build output directory** | *(empty)* |
 
-Add under **Settings** → **Environment variables** (Production):
+Then click **Retry deployment** on the latest build.
+
+---
+
+## Environment variables
+
+**Settings** → **Variables and secrets** (runtime) and/or **Build variables**:
 
 | Variable | Required |
 |----------|----------|
-| `RESEND_API_KEY` | Yes — contact form emails |
-| `CONTACT_TO_EMAIL` | Optional — defaults to `muhammad.fahim@mz5digital.com` |
-| `CONTACT_FROM_EMAIL` | Optional — e.g. `MZ5 Digital <onboarding@resend.dev>` |
-| `NODE_VERSION` | `22` (recommended) |
+| `RESEND_API_KEY` | Yes — contact form |
+| `CONTACT_TO_EMAIL` | Optional |
+| `CONTACT_FROM_EMAIL` | Optional |
+| `NODE_VERSION` | `22` |
 
-## Deploy from your machine
+---
+
+## Deploy from your computer
 
 ```bash
 npm install
+npx wrangler login
 npm run deploy
 ```
 
-Log in with Wrangler when prompted (`npx wrangler login`).
+After deploy, Cloudflare shows the live URL (often `https://mz5-digital-site.<your-subdomain>.workers.dev`).  
+You can attach **Custom domains** or your `pages.dev` subdomain in the dashboard under **Domains**.
+
+---
 
 ## Local preview (Workers runtime)
 
@@ -41,8 +66,11 @@ Log in with Wrangler when prompted (`npx wrangler login`).
 npm run preview
 ```
 
-## Troubleshooting
+---
 
-- **`dist` not found** — Output directory must be empty; use `npm run pages:build`, not `npm run build` alone for Pages deploy.
-- **Contact form fails** — Set `RESEND_API_KEY` in Cloudflare environment variables.
-- **Node version** — Use Node 22+ locally and in Cloudflare build settings.
+## Checklist if still 404
+
+1. Latest deployment status is **Success** (not just “build finished”).
+2. Build log includes `Worker deployed` / `Published`.
+3. You open the URL shown in the deployment details (not an old preview URL).
+4. `RESEND_API_KEY` is set for production if testing the contact form.
