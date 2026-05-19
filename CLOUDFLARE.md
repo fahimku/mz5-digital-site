@@ -6,12 +6,12 @@ Your build log shows **Node 18** and **`npx @cloudflare/next-on-pages@1`**. That
 
 ### Change Build settings to this
 
-| Setting | ❌ Wrong (current) | ✅ Correct |
-|---------|-------------------|------------|
-| Framework preset | Next.js | **None** |
+| Setting | ❌ Wrong | ✅ Correct |
+|---------|----------|------------|
+| Framework preset | **Next.js** (forces Node 18) | **None** |
 | Build command | `npx @cloudflare/next-on-pages@1` | **`npm run deploy`** |
-| Build output directory | `.vercel/output/static` | **(leave empty)** |
-| Node version | 18 (default) | **`22`** |
+| Build output directory | `/` or `.vercel/output/static` | **(completely empty)** |
+| `NODE_VERSION` env var | missing | **`22`** |
 
 Save, then **Retry deployment**.
 
@@ -23,7 +23,7 @@ Save, then **Retry deployment**.
 
 | Variable | Value |
 |----------|--------|
-| `NODE_VERSION` | `22` |
+| `NODE_VERSION` | **`22`** ← **required** (fixes Node 18 error) |
 | `CLOUDFLARE_API_TOKEN` | API token (see below) — **Encrypt** |
 | `CLOUDFLARE_ACCOUNT_ID` | Your Cloudflare account ID |
 | `RESEND_API_KEY` | Your Resend key — **Encrypt** |

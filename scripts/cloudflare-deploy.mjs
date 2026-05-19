@@ -5,6 +5,30 @@
  */
 import { spawnSync } from "node:child_process";
 
+const MIN_NODE = 22;
+const nodeMajor = Number.parseInt(process.versions.node.split(".")[0], 10);
+
+if (nodeMajor < MIN_NODE) {
+  console.error(`
+ERROR: Node.js ${process.version} is too old (need ${MIN_NODE}+).
+
+Cloudflare is running Node 18 because either:
+  1. Framework preset is still "Next.js" — change it to "None"
+  2. NODE_VERSION is not set — add environment variable NODE_VERSION = 22
+
+Fix in dashboard → Settings → Build:
+  Framework preset:  None
+  Build command:     npm run deploy
+  Output directory:  (empty — delete "/")
+
+Fix in dashboard → Settings → Variables:
+  NODE_VERSION = 22
+
+Then Retry deployment.
+`);
+  process.exit(1);
+}
+
 function resolveApiToken() {
   if (process.env.CLOUDFLARE_API_TOKEN) return process.env.CLOUDFLARE_API_TOKEN;
   if (process.env.CF_API_TOKEN) return process.env.CF_API_TOKEN;
@@ -18,21 +42,10 @@ if (!token) {
   console.error(`
 ERROR: CLOUDFLARE_API_TOKEN is not set.
 
-Cloudflare Pages does not inject this automatically when you run "npm run deploy"
-inside the build step. Add it in the dashboard:
-
-  Workers & Pages → mz5-digital-site → Settings → Environment variables
-
-Create a token: https://dash.cloudflare.com/profile/api-tokens
-  → Create Token → "Edit Cloudflare Workers" template
-
-Add these variables (Production + Preview):
-  CLOUDFLARE_API_TOKEN = <your token>
-  CLOUDFLARE_ACCOUNT_ID = <your account id>
-
-Account ID: Cloudflare dashboard → Workers & Pages → right sidebar.
-
-Then set Build command to: npm run deploy
+Add in dashboard → Settings → Variables and secrets (Production + Preview):
+  CLOUDFLARE_API_TOKEN = <API token from dash.cloudflare.com/profile/api-tokens>
+  CLOUDFLARE_ACCOUNT_ID = <account id>
+  NODE_VERSION = 22
 `);
   process.exit(1);
 }
@@ -48,7 +61,7 @@ function run(command, args) {
   if (result.status !== 0) process.exit(result.status ?? 1);
 }
 
-console.log("OpenNext — building...");
+console.log(`OpenNext — building (Node ${process.version})...`);
 run("npx", ["opennextjs-cloudflare", "build"]);
 
 console.log("OpenNext — deploying...");
