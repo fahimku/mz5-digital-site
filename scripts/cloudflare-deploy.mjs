@@ -50,6 +50,15 @@ Add in dashboard → Settings → Variables and secrets (Production + Preview):
   process.exit(1);
 }
 
+if (token.startsWith("cfk_")) {
+  console.warn(`
+WARNING: CLOUDFLARE_API_TOKEN looks like a Workers Builds key (cfk_...).
+Wrangler deploy often needs a standard API Token from:
+  https://dash.cloudflare.com/profile/api-tokens
+  → Create Token → "Edit Cloudflare Workers" template
+`);
+}
+
 process.env.CLOUDFLARE_API_TOKEN = token;
 
 function run(command, args) {
@@ -67,4 +76,19 @@ run("npx", ["opennextjs-cloudflare", "build"]);
 console.log("OpenNext — deploying...");
 run("npx", ["opennextjs-cloudflare", "deploy"]);
 
-console.log("Deploy complete.");
+console.log(`
+Deploy complete.
+
+IMPORTANT — Your app runs on the WORKER, not legacy Pages static hosting.
+
+1. Open Cloudflare Dashboard → Workers & Pages
+2. Click the Worker named "mz5-digital-site" (Workers tab, not only Pages)
+3. Use the "Visit" / workers.dev URL (e.g. https://mz5-digital-site.<your-subdomain>.workers.dev)
+
+If https://mz5-digital-site.pages.dev shows 404:
+  → Worker → Settings → Domains & Routes → Add custom domain
+  → OR recreate the project as a Worker (not Pages static) connected to Git
+
+pages.dev 404 happens because Pages uploads static files but skips wrangler.jsonc
+(OpenNext needs a Worker with "main", which Pages static mode does not use).
+`);

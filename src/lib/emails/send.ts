@@ -1,61 +1,48 @@
-import { Resend } from "resend";
-import {
-  adminNotificationEmail,
-  userConfirmationEmail,
-  type ContactFormData,
-} from "./templates";
+import { siteConfig } from "@/lib/site";
+import type { ContactFormData } from "./types";
 
-function getResend() {
-  const key = process.env.RESEND_API_KEY;
-  if (!key) return null;
-  return new Resend(key);
+/** Inbox for contact form — override with CONTACT_TO_EMAIL in Cloudflare if needed */
+function getRecipient() {
+  return process.env.CONTACT_TO_EMAIL ?? siteConfig.contactInbox;
 }
 
-function getFromAddress() {
-  return (
-    process.env.CONTACT_FROM_EMAIL ?? "MZ5 Digital <onboarding@resend.dev>"
-  );
-}
-
-function getAdminEmail() {
-  return process.env.CONTACT_TO_EMAIL ?? "muhammad.fahim@mz5digital.com";
-}
-
+/**
+ * Sends form submissions via FormSubmit (no API key required).
+ * First deploy: check muhammad.fahim@mz5digital.com for a one-time activation link from FormSubmit.
+ */
 export async function sendContactEmails(data: ContactFormData) {
-  const resend = getResend();
-  if (!resend) {
-    throw new Error("RESEND_API_KEY is not configured");
-  }
+  const to = getRecipient();
+  const url = `https://formsubmit.co/ajax/${encodeURIComponent(to)}`;
 
-  const from = getFromAddress();
-  const adminEmail = getAdminEmail();
-  const admin = adminNotificationEmail(data);
-  const confirmation = userConfirmationEmail(data);
-
-  const [adminResult, userResult] = await Promise.all([
-    resend.emails.send({
-      from,
-      to: adminEmail,
-      replyTo: data.email,
-      subject: admin.subject,
-      html: admin.html,
-      text: admin.text,
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({
+      _subject: `New inquiry from ${data.name} — MZ5 Digital`,
+      _template: "table",
+      _captcha: false,
+      _autoresponse: `Hi ${data.name.split(" ")[0]}, thanks for reaching out to MZ5 Digital. We'll be in touch within one business day.`,
+      name: data.name,
+      email: data.email,
+      company: data.company || "—",
+      budget: data.budget,
+      message: data.message,
     }),
-    resend.emails.send({
-      from,
-      to: data.email,
-      subject: confirmation.subject,
-      html: confirmation.html,
-      text: confirmation.text,
-    }),
-  ]);
+  });
 
-  if (adminResult.error) {
-    throw new Error(adminResult.error.message);
-  }
-  if (userResult.error) {
-    throw new Error(userResult.error.message);
+  let result: { success?: string };
+  try {
+    result = (await response.json()) as { success?: string };
+  } catch {
+    throw new Error("Email service returned an invalid response");
   }
 
-  return { adminId: adminResult.data?.id, userId: userResult.data?.id };
+  if (!response.ok || result.success !== "true") {
+    throw new Error("Failed to deliver your message. Please try again shortly.");
+  }
+
+  return result;
 }

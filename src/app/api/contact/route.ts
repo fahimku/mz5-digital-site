@@ -32,16 +32,10 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error("[contact]", error);
     const message =
-      error instanceof Error ? error.message : "Failed to send message";
-    const isConfig = message.includes("RESEND_API_KEY");
+      error instanceof Error
+        ? error.message
+        : "Something went wrong. Please try again or email us directly.";
 
-    return NextResponse.json(
-      {
-        error: isConfig
-          ? "Email service is not configured. Please try again later."
-          : "Something went wrong. Please try again or email us directly.",
-      },
-      { status: isConfig ? 503 : 500 },
-    );
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

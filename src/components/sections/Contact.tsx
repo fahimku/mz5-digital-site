@@ -88,7 +88,6 @@ export function Contact() {
                   </p>
                   <p className="mt-2 text-sm text-muted">
                     Thanks — we&apos;ll be in touch within one business day.
-                    Check your inbox for a confirmation email.
                   </p>
                   <button
                     type="button"

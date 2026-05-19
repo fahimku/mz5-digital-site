@@ -21,7 +21,7 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Deploy to Cloudflare
 
-See **[CLOUDFLARE.md](./CLOUDFLARE.md)** for Pages/Workers setup. Use **`npm run deploy`** as the Cloudflare build command (not `pages:build` alone) and add `RESEND_API_KEY` in the dashboard.
+See **[CLOUDFLARE.md](./CLOUDFLARE.md)** for Pages/Workers setup. Live site: `https://mz5-digital-site.fahimku.workers.dev`
 
 ## Project structure
 
@@ -45,15 +45,11 @@ src/
 
 ## Contact form emails
 
-Submissions are sent via [Resend](https://resend.com) to `muhammad.fahim@mz5digital.com`, with a branded confirmation email to the visitor.
+Submissions are sent to **muhammad.fahim@mz5digital.com** via [FormSubmit](https://formsubmit.co) — **no API key** required on Cloudflare.
 
-1. Copy `.env.example` to `.env.local`
-2. Add your `RESEND_API_KEY` from [resend.com/api-keys](https://resend.com/api-keys)
-3. Until `mz5digital.com` is verified in Resend, use `onboarding@resend.dev` as the sender
+Optional: set `CONTACT_TO_EMAIL` in Cloudflare variables to use a different inbox.
 
-```bash
-cp .env.example .env.local
-```
+**First time only:** FormSubmit may email you a one-time activation link — click it to enable delivery.
 
 ## Customize
 
