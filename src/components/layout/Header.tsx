@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/Button";
 import { Logo } from "@/components/ui/Logo";
 import { Container } from "@/components/ui/Container";
 import { MobileNav } from "@/components/layout/MobileNav";
-import { ServicesDropdown } from "@/components/layout/ServicesDropdown";
-import { navLinks } from "@/lib/site";
+import { NavDropdown } from "@/components/layout/NavDropdown";
+import { aiLinks, marketingLinks, navLinks } from "@/lib/site";
 
 export function Header() {
   const { scrollY } = useScroll();
@@ -31,7 +31,8 @@ export function Header() {
         <Logo />
 
         <nav className="hidden items-center gap-8 md:flex">
-          <ServicesDropdown />
+          <NavDropdown label="Marketing" items={marketingLinks} />
+          <NavDropdown label="AI" items={aiLinks} />
           {navLinks.map((link) => (
             <Link
               key={link.href}

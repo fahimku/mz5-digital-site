@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { Logo } from "@/components/ui/Logo";
-import { navLinks, serviceLinks, siteConfig } from "@/lib/site";
+import { aiLinks, marketingLinks, navLinks, siteConfig } from "@/lib/site";
 
 export function Footer() {
   return (
@@ -17,9 +17,22 @@ export function Footer() {
           </div>
 
           <div>
-            <h4 className="mb-4 text-sm font-semibold text-white">Services</h4>
+            <h4 className="mb-4 text-sm font-semibold text-white">Marketing</h4>
             <ul className="space-y-2">
-              {serviceLinks.map((link) => (
+              {marketingLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-sm text-muted transition hover:text-white"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <h4 className="mt-6 mb-4 text-sm font-semibold text-white">AI</h4>
+            <ul className="space-y-2">
+              {aiLinks.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
@@ -45,14 +58,6 @@ export function Footer() {
                   </Link>
                 </li>
               ))}
-              <li>
-                <Link
-                  href="/#contact"
-                  className="text-sm text-muted transition hover:text-white"
-                >
-                  Contact
-                </Link>
-              </li>
             </ul>
           </div>
         </div>

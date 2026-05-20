@@ -9,29 +9,45 @@ export const siteConfig = {
 export const navLinks = [
   { label: "Process", href: "/#process" },
   { label: "About", href: "/#about" },
+  { label: "Contact", href: "/#contact" },
 ] as const;
 
-export const serviceLinks = [
-  {
-    label: "Branding",
-    href: "/services/branding",
-    description: "Identity, positioning & visual systems",
-  },
+export const marketingLinks = [
   {
     label: "Web Development",
     href: "/services/web-development",
     description: "Fast, scalable sites & web apps",
   },
   {
-    label: "SEO",
-    href: "/services/seo",
-    description: "Organic growth & technical SEO",
+    label: "Online Advertising",
+    href: "/services/ppc",
+    description: "Paid search, social & performance",
   },
   {
-    label: "PPC",
-    href: "/services/ppc",
-    description: "Paid search & performance campaigns",
+    label: "CRM & Automation",
+    href: "/services/crm-automation",
+    description: "HubSpot, workflows & integrations",
   },
+] as const;
+
+export const aiLinks = [
+  {
+    label: "AI Consulting",
+    href: "/services/ai-consulting",
+    description: "Strategy, roadmaps & adoption",
+  },
+  {
+    label: "AI Agents",
+    href: "/services/ai-agents",
+    description: "Custom agents for ops & support",
+  },
+] as const;
+
+/** @deprecated Use marketingLinks — kept for homepage/footer sections still on legacy slugs */
+export const serviceLinks = [
+  ...marketingLinks,
+  { label: "Branding", href: "/services/branding", description: "Identity & visual systems" },
+  { label: "SEO", href: "/services/seo", description: "Organic growth & technical SEO" },
 ] as const;
 
 export const stats = [
@@ -141,7 +157,14 @@ export const budgetOptions = [
   "$50k+",
 ] as const;
 
-export type ServiceSlug = "branding" | "web-development" | "seo" | "ppc";
+export type ServiceSlug =
+  | "branding"
+  | "web-development"
+  | "seo"
+  | "ppc"
+  | "crm-automation"
+  | "ai-consulting"
+  | "ai-agents";
 
 export const servicePages: Record<
   ServiceSlug,
@@ -212,7 +235,7 @@ export const servicePages: Record<
     ],
   },
   ppc: {
-    title: "PPC",
+    title: "Online Advertising",
     headline: "Paid campaigns tuned for ROAS, not impressions.",
     accent: "ROAS",
     description:
@@ -228,6 +251,63 @@ export const servicePages: Record<
       "Conversion tracking setup",
       "Creative & copy variants",
       "Performance dashboards",
+    ],
+  },
+  "crm-automation": {
+    title: "CRM & Automation",
+    headline: "Systems that connect your stack and follow up for you.",
+    accent: "connect",
+    description:
+      "We implement CRMs, marketing automation and integrations so leads flow cleanly from first touch to closed deal.",
+    features: [
+      "HubSpot & CRM setup",
+      "Lead routing & lifecycle stages",
+      "Email workflows & nurture sequences",
+      "Zapier, webhooks & custom integrations",
+    ],
+    deliverables: [
+      "CRM architecture & pipeline design",
+      "Automation playbooks",
+      "Integration map & documentation",
+      "Team training & handoff",
+    ],
+  },
+  "ai-consulting": {
+    title: "AI Consulting",
+    headline: "Practical AI strategy tied to real business outcomes.",
+    accent: "outcomes",
+    description:
+      "We help leadership teams assess opportunities, choose tools and roll out AI with governance, training and measurable pilots.",
+    features: [
+      "Use-case discovery workshops",
+      "Tool & vendor evaluation",
+      "Policy, privacy & governance guidance",
+      "Pilot design & success metrics",
+    ],
+    deliverables: [
+      "AI opportunity roadmap",
+      "Vendor shortlist & recommendations",
+      "Pilot scope & implementation plan",
+      "Executive briefing materials",
+    ],
+  },
+  "ai-agents": {
+    title: "AI Agents",
+    headline: "Custom agents that handle work, not just chat.",
+    accent: "work",
+    description:
+      "We build AI agents for support, sales ops and internal workflows — connected to your data and designed for reliability.",
+    features: [
+      "Support & FAQ agents",
+      "Lead qualification & routing",
+      "Internal knowledge assistants",
+      "API & CRM integrations",
+    ],
+    deliverables: [
+      "Agent architecture & prompts",
+      "Deployed agent on your stack",
+      "Monitoring & escalation flows",
+      "Maintenance & iteration plan",
     ],
   },
 };

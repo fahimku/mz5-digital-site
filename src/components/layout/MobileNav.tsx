@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { navLinks, serviceLinks } from "@/lib/site";
+import { aiLinks, marketingLinks, navLinks } from "@/lib/site";
 
 export function MobileNav() {
   const [open, setOpen] = useState(false);
@@ -30,9 +30,22 @@ export function MobileNav() {
           >
             <nav className="flex flex-col gap-1 px-6 py-4">
               <p className="px-2 py-1 text-xs tracking-widest text-zinc-500 uppercase">
-                Services
+                Marketing
               </p>
-              {serviceLinks.map((link) => (
+              {marketingLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setOpen(false)}
+                  className="rounded-lg px-2 py-2 text-sm text-muted hover:bg-white/5 hover:text-white"
+                >
+                  {link.label}
+                </Link>
+              ))}
+              <p className="mt-2 px-2 py-1 text-xs tracking-widest text-zinc-500 uppercase">
+                AI
+              </p>
+              {aiLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
