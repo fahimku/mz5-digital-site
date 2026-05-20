@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { FadeIn } from "@/components/motion/FadeIn";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { submitToWeb3Forms, validateContactPayload } from "@/lib/web3forms";
 import { budgetOptions } from "@/lib/site";
 
 type FormStatus = "idle" | "loading" | "success" | "error";
@@ -37,28 +38,25 @@ export function Contact() {
       message: String(formData.get("message") ?? "").trim(),
     };
 
+    const validationError = validateContactPayload(payload);
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+
     setStatus("loading");
 
     try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      const data = (await res.json()) as { error?: string };
-
-      if (!res.ok) {
-        setError(data.error ?? "Something went wrong. Please try again.");
-        setStatus("error");
-        return;
-      }
-
+      await submitToWeb3Forms(payload);
       setStatus("success");
       form.reset();
       setBudget(null);
-    } catch {
-      setError("Network error. Please check your connection and try again.");
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Network error. Please check your connection and try again."
+      );
       setStatus("error");
     }
   }
@@ -77,6 +75,14 @@ export function Contact() {
               onSubmit={handleSubmit}
               className="space-y-5 rounded-2xl border border-white/10 bg-card p-6 sm:p-8"
             >
+              <input
+                type="checkbox"
+                name="botcheck"
+                className="hidden"
+                style={{ display: "none" }}
+                tabIndex={-1}
+                autoComplete="off"
+              />
               {status === "success" ? (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
@@ -123,7 +129,12 @@ export function Contact() {
                     disabled={status === "loading"}
                   />
 
-                  <div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5 }}
+                  >
                     <label className="mb-2 block text-xs font-medium tracking-wide text-zinc-400 uppercase">
                       Budget
                     </label>
@@ -144,7 +155,7 @@ export function Contact() {
                         </button>
                       ))}
                     </div>
-                  </div>
+                  </motion.div>
 
                   <div>
                     <label

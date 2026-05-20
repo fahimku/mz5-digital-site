@@ -45,11 +45,11 @@ src/
 
 ## Contact form emails
 
-Submissions are sent to **muhammad.fahim@mz5digital.com** via [FormSubmit](https://formsubmit.co) — **no API key** required on Cloudflare.
+Submissions are sent via [Web3Forms](https://web3forms.com) from the browser (required on the free plan).
 
-Optional: set `CONTACT_TO_EMAIL` in Cloudflare variables to use a different inbox.
-
-**First time only:** FormSubmit may email you a one-time activation link — click it to enable delivery.
+1. Sign up at [web3forms.com](https://web3forms.com) with **muhammad.fahim@mz5digital.com**
+2. Add your access key to `.env` as **`NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY`** (restart `npm run dev` after changing `.env`)
+3. Add the same variable in Cloudflare **Variables** for production deploys
 
 ## Customize
 

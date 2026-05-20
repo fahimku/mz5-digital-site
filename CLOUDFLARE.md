@@ -26,9 +26,11 @@ Save, then **Retry deployment**.
 | `NODE_VERSION` | **`22`** ← **required** (fixes Node 18 error) |
 | `CLOUDFLARE_API_TOKEN` | API token (see below) — **Encrypt** |
 | `CLOUDFLARE_ACCOUNT_ID` | Your Cloudflare account ID |
-| `CONTACT_TO_EMAIL` | Optional — defaults to `muhammad.fahim@mz5digital.com` |
+Contact form uses [Web3Forms](https://web3forms.com) from the browser. Add:
 
-Contact form uses **FormSubmit** (no `RESEND_API_KEY` needed).
+| Variable | Value |
+|----------|--------|
+| `NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY` | From [web3forms.com](https://web3forms.com) (register with `muhammad.fahim@mz5digital.com`) |
 
 ### Create `CLOUDFLARE_API_TOKEN` (fixes error 9109 / 10000)
 
@@ -56,7 +58,7 @@ If you exposed the old token in a screenshot, **revoke it** and use the new one.
 ## What `npm run deploy` does
 
 1. Builds Next.js with **OpenNext** (`@opennextjs/cloudflare`)
-2. Deploys the Worker to Cloudflare (supports `/api/contact`)
+2. Deploys the Worker to Cloudflare (contact form uses Web3Forms in the browser)
 
 This is **not** static `dist` or `.vercel/output/static`.
 
@@ -98,7 +100,7 @@ wrangler.jsonc ... does not contain pages_build_output_dir. Skipping file
 ```
 
 So Cloudflare **Pages** only uploaded static `/_next/static/...` files.  
-Your **Next.js app** (HTML + `/api/contact`) lives on the **Worker** from `opennextjs-cloudflare deploy`.
+Your **Next.js app** (HTML + client routes) lives on the **Worker** from `opennextjs-cloudflare deploy`.
 
 `https://mz5-digital-site.pages.dev` → static Pages (no app router) → **404**  
 Worker URL → full app → **works**
