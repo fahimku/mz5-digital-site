@@ -21,7 +21,7 @@ export function Header() {
   return (
     <motion.header
       style={{ backgroundColor: background }}
-      className="fixed top-0 right-0 left-0 z-50"
+      className="fixed top-0 right-0 left-0 z-50 backdrop-blur-[2px]"
     >
       <motion.div
         style={{ opacity: borderOpacity }}

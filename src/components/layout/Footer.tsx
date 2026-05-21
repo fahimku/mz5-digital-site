@@ -5,7 +5,7 @@ import { aiLinks, marketingLinks, navLinks, siteConfig } from "@/lib/site";
 
 export function Footer() {
   return (
-    <footer className="border-t border-white/10 bg-black py-16">
+    <footer className="relative z-10 border-t border-white/10 bg-black/80 py-16 backdrop-blur-sm">
       <Container>
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
           <div className="lg:col-span-2">

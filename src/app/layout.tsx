@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Instrument_Serif, Space_Grotesk } from "next/font/google";
+import { ScrollVectorBackground } from "@/components/background/ScrollVectorBackground";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
+import { NavigationLoader } from "@/components/layout/NavigationLoader";
 import { siteConfig } from "@/lib/site";
 import "./globals.css";
 
@@ -37,9 +39,11 @@ export default function RootLayout({
       lang="en"
       className={`${spaceGrotesk.variable} ${instrumentSerif.variable} h-full scroll-smooth antialiased`}
     >
-      <body className="min-h-full bg-black font-sans text-white">
+      <body className="relative min-h-full bg-black font-sans text-white">
+        <ScrollVectorBackground />
+        <NavigationLoader />
         <Header />
-        <main className="flex-1">{children}</main>
+        <main className="relative z-10 flex-1">{children}</main>
         <Footer />
       </body>
     </html>

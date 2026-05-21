@@ -10,9 +10,7 @@ import { stats, siteConfig } from "@/lib/site";
 export function Hero() {
   return (
     <section className="relative overflow-hidden pt-28 pb-20 lg:pt-36 lg:pb-28">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(255,122,80,0.12),transparent)]" />
-
-      <Container>
+      <Container className="relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
