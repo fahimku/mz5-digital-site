@@ -46,7 +46,7 @@ export function ServiceCard({
     >
       <Link
         href={href}
-        className="group flex h-full flex-col rounded-2xl border border-white/10 bg-card p-6 transition-colors duration-300 hover:border-white/20 hover:bg-white/[0.05]"
+        className="surface-panel group flex h-full flex-col rounded-2xl p-6 transition-colors duration-300 hover:border-white/20 hover:bg-zinc-950/95"
       >
         <motion.div
           className="mb-5 flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10 text-accent"

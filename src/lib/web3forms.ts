@@ -79,14 +79,45 @@ function formatMessage(data: ContactFormData) {
   ].join("\n");
 }
 
-export function validateContactPayload(data: ContactFormData): string | null {
-  if (data.name.length < 2) return "Name must be at least 2 characters.";
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
-    return "Please enter a valid email address.";
+export type ContactField = "name" | "email" | "company" | "budget" | "message";
+
+export type ContactFieldErrors = Partial<Record<ContactField, string>>;
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+export function validateContactFields(
+  data: ContactFormData
+): ContactFieldErrors {
+  const errors: ContactFieldErrors = {};
+
+  const name = data.name.trim();
+  if (!name) errors.name = "Name is required.";
+  else if (name.length < 2) errors.name = "Name must be at least 2 characters.";
+  else if (name.length > 100) errors.name = "Name must be 100 characters or less.";
+
+  const email = data.email.trim();
+  if (!email) errors.email = "Email is required.";
+  else if (!EMAIL_REGEX.test(email)) {
+    errors.email = "Please enter a valid email address.";
   }
-  if (!data.budget) return "Please select a budget range.";
-  if (data.message.length < 10) {
-    return "Please share a bit more about your project.";
+
+  if (data.company.length > 100) {
+    errors.company = "Company must be 100 characters or less.";
   }
-  return null;
+
+  if (!data.budget) errors.budget = "Please select a budget range.";
+
+  const message = data.message.trim();
+  if (!message) errors.message = "Project goals are required.";
+  else if (message.length < 10) {
+    errors.message = "Please share a bit more (at least 10 characters).";
+  } else if (message.length > 5000) {
+    errors.message = "Message must be 5000 characters or less.";
+  }
+
+  return errors;
+}
+
+export function hasContactFieldErrors(errors: ContactFieldErrors) {
+  return Object.keys(errors).length > 0;
 }

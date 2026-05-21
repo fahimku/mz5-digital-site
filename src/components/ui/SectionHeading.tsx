@@ -17,12 +17,12 @@ export function SectionHeading({
   return (
     <FadeIn className={align === "center" ? "text-center" : ""}>
       {label && (
-        <p className="mb-4 text-xs font-medium tracking-[0.2em] text-accent uppercase">
+        <p className="text-on-texture mb-4 text-xs font-medium tracking-[0.2em] text-accent uppercase">
           {label}
         </p>
       )}
       <h2
-        className={`max-w-4xl text-3xl leading-tight font-semibold tracking-tight text-white sm:text-4xl lg:text-5xl ${className}`}
+        className={`text-on-texture max-w-4xl text-3xl leading-tight font-semibold tracking-tight text-white sm:text-4xl lg:text-5xl ${className}`}
       >
         {children}
       </h2>

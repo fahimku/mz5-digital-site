@@ -8,24 +8,42 @@ import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { FadeIn } from "@/components/motion/FadeIn";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { submitToWeb3Forms, validateContactPayload } from "@/lib/web3forms";
+import {
+  hasContactFieldErrors,
+  submitToWeb3Forms,
+  validateContactFields,
+  type ContactField,
+  type ContactFieldErrors,
+} from "@/lib/web3forms";
 import { budgetOptions } from "@/lib/site";
 
 type FormStatus = "idle" | "loading" | "success" | "error";
 
+const fieldClass = (hasError: boolean) =>
+  `w-full rounded-xl border bg-black/70 px-4 py-3 text-sm text-white placeholder:text-zinc-500 transition focus:outline-none focus:ring-1 disabled:opacity-50 ${
+    hasError
+      ? "border-red-400/60 focus:border-red-400/70 focus:ring-red-400/25"
+      : "border-white/10 focus:border-accent/50 focus:ring-accent/30"
+  }`;
+
 export function Contact() {
   const [budget, setBudget] = useState<string | null>(null);
   const [status, setStatus] = useState<FormStatus>("idle");
-  const [error, setError] = useState<string | null>(null);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<ContactFieldErrors>({});
+
+  function clearFieldError(field: ContactField) {
+    setFieldErrors((prev) => {
+      if (!prev[field]) return prev;
+      const next = { ...prev };
+      delete next[field];
+      return next;
+    });
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setError(null);
-
-    if (!budget) {
-      setError("Please select a budget range.");
-      return;
-    }
+    setSubmitError(null);
 
     const form = e.currentTarget;
     const formData = new FormData(form);
@@ -34,16 +52,20 @@ export function Contact() {
       name: String(formData.get("name") ?? "").trim(),
       email: String(formData.get("email") ?? "").trim(),
       company: String(formData.get("company") ?? "").trim(),
-      budget,
+      budget: budget ?? "",
       message: String(formData.get("message") ?? "").trim(),
     };
 
-    const validationError = validateContactPayload(payload);
-    if (validationError) {
-      setError(validationError);
+    const errors = validateContactFields(payload);
+    if (hasContactFieldErrors(errors)) {
+      setFieldErrors(errors);
+      setStatus("error");
+      const firstInvalid = form.querySelector<HTMLElement>("[aria-invalid='true']");
+      firstInvalid?.focus();
       return;
     }
 
+    setFieldErrors({});
     setStatus("loading");
 
     try {
@@ -52,7 +74,7 @@ export function Contact() {
       form.reset();
       setBudget(null);
     } catch (err) {
-      setError(
+      setSubmitError(
         err instanceof Error
           ? err.message
           : "Network error. Please check your connection and try again."
@@ -73,7 +95,8 @@ export function Contact() {
           <FadeIn delay={0.1}>
             <form
               onSubmit={handleSubmit}
-              className="space-y-5 rounded-2xl border border-white/10 bg-card p-6 sm:p-8"
+              noValidate
+              className="surface-panel space-y-5 rounded-2xl p-6 sm:p-8"
             >
               <input
                 type="checkbox"
@@ -97,7 +120,11 @@ export function Contact() {
                   </p>
                   <button
                     type="button"
-                    onClick={() => setStatus("idle")}
+                    onClick={() => {
+                      setStatus("idle");
+                      setFieldErrors({});
+                      setSubmitError(null);
+                    }}
                     className="mt-6 text-sm text-accent hover:underline"
                   >
                     Send another message
@@ -112,6 +139,8 @@ export function Contact() {
                       placeholder="Your name"
                       required
                       disabled={status === "loading"}
+                      error={fieldErrors.name}
+                      onChange={() => clearFieldError("name")}
                     />
                     <Field
                       label="Email"
@@ -120,6 +149,8 @@ export function Contact() {
                       placeholder="you@company.com"
                       required
                       disabled={status === "loading"}
+                      error={fieldErrors.email}
+                      onChange={() => clearFieldError("email")}
                     />
                   </div>
                   <Field
@@ -127,24 +158,36 @@ export function Contact() {
                     name="company"
                     placeholder="Company name"
                     disabled={status === "loading"}
+                    error={fieldErrors.company}
+                    onChange={() => clearFieldError("company")}
                   />
 
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5 }}
-                  >
+                  <div>
                     <label className="mb-2 block text-xs font-medium tracking-wide text-zinc-400 uppercase">
                       Budget
+                      <span className="ml-1 text-accent">*</span>
                     </label>
-                    <div className="flex flex-wrap gap-2">
+                    <div
+                      className={`flex flex-wrap gap-2 ${
+                        fieldErrors.budget
+                          ? "rounded-xl p-2 ring-1 ring-inset ring-red-400/50"
+                          : ""
+                      }`}
+                      role="group"
+                      aria-invalid={fieldErrors.budget ? true : undefined}
+                      aria-describedby={
+                        fieldErrors.budget ? "budget-error" : undefined
+                      }
+                    >
                       {budgetOptions.map((option) => (
                         <button
                           key={option}
                           type="button"
                           disabled={status === "loading"}
-                          onClick={() => setBudget(option)}
+                          onClick={() => {
+                            setBudget(option);
+                            clearFieldError("budget");
+                          }}
                           className={`rounded-full border px-3 py-1.5 text-xs transition disabled:opacity-50 ${
                             budget === option
                               ? "border-accent bg-accent/10 text-accent"
@@ -155,7 +198,8 @@ export function Contact() {
                         </button>
                       ))}
                     </div>
-                  </motion.div>
+                    <FieldError id="budget-error" message={fieldErrors.budget} />
+                  </div>
 
                   <div>
                     <label
@@ -163,22 +207,27 @@ export function Contact() {
                       className="mb-2 block text-xs font-medium tracking-wide text-zinc-400 uppercase"
                     >
                       Project goals
+                      <span className="ml-1 text-accent">*</span>
                     </label>
                     <textarea
                       id="message"
                       name="message"
                       rows={4}
-                      required
-                      minLength={10}
                       disabled={status === "loading"}
                       placeholder="Tell us about your project..."
-                      className="w-full resize-none rounded-xl border border-white/10 bg-black/50 px-4 py-3 text-sm text-white placeholder:text-zinc-600 focus:border-accent/50 focus:outline-none focus:ring-1 focus:ring-accent/30 disabled:opacity-50"
+                      aria-invalid={fieldErrors.message ? true : undefined}
+                      aria-describedby={
+                        fieldErrors.message ? "message-error" : undefined
+                      }
+                      onChange={() => clearFieldError("message")}
+                      className={fieldClass(Boolean(fieldErrors.message))}
                     />
+                    <FieldError id="message-error" message={fieldErrors.message} />
                   </div>
 
-                  {error && (
+                  {submitError && (
                     <p className="text-sm text-red-400" role="alert">
-                      {error}
+                      {submitError}
                     </p>
                   )}
 
@@ -206,6 +255,15 @@ export function Contact() {
   );
 }
 
+function FieldError({ id, message }: { id: string; message?: string }) {
+  if (!message) return null;
+  return (
+    <p id={id} className="mt-1.5 text-xs text-red-400" role="alert">
+      {message}
+    </p>
+  );
+}
+
 function Field({
   label,
   name,
@@ -213,6 +271,8 @@ function Field({
   placeholder,
   required,
   disabled,
+  error,
+  onChange,
 }: {
   label: string;
   name: string;
@@ -220,7 +280,11 @@ function Field({
   placeholder: string;
   required?: boolean;
   disabled?: boolean;
+  error?: string;
+  onChange?: () => void;
 }) {
+  const errorId = `${name}-error`;
+
   return (
     <div>
       <label
@@ -228,16 +292,20 @@ function Field({
         className="mb-2 block text-xs font-medium tracking-wide text-zinc-400 uppercase"
       >
         {label}
+        {required && <span className="ml-1 text-accent">*</span>}
       </label>
       <input
         id={name}
         name={name}
         type={type}
         placeholder={placeholder}
-        required={required}
         disabled={disabled}
-        className="w-full rounded-xl border border-white/10 bg-black/50 px-4 py-3 text-sm text-white placeholder:text-zinc-600 focus:border-accent/50 focus:outline-none focus:ring-1 focus:ring-accent/30 disabled:opacity-50"
+        aria-invalid={error ? true : undefined}
+        aria-describedby={error ? errorId : undefined}
+        onChange={onChange}
+        className={fieldClass(Boolean(error))}
       />
+      <FieldError id={errorId} message={error} />
     </div>
   );
 }

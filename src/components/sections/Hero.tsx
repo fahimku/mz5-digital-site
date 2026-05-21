@@ -27,7 +27,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 28 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-          className="max-w-4xl text-4xl leading-[1.08] font-semibold tracking-tight text-white sm:text-5xl lg:text-7xl"
+          className="text-on-texture max-w-4xl text-4xl leading-[1.08] font-semibold tracking-tight text-white sm:text-5xl lg:text-7xl"
         >
           Brands built to <Accent>grow</Accent>, systems built to{" "}
           <Accent>scale</Accent>.
@@ -37,7 +37,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.35 }}
-          className="mt-6 max-w-xl text-base leading-relaxed text-muted sm:text-lg"
+          className="text-on-texture mt-6 max-w-xl text-base leading-relaxed text-zinc-300 sm:text-lg"
         >
           We partner with ambitious teams on branding, web development, SEO and
           performance marketing — design and engineering in one studio.

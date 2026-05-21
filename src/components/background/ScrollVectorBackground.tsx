@@ -10,7 +10,6 @@ import {
 
 const PATTERN_ID = "mz5-diamond-weave";
 
-/** Tileable diamond weave — inspired by dark textured backgrounds (original SVG, not stock art). */
 function DiamondWeavePattern({
   opacity,
   patternY,
@@ -38,36 +37,35 @@ function DiamondWeavePattern({
           <rect width="24" height="12" fill="#050505" />
           <path
             d="M6 0 L12 6 L6 12 L0 6 Z"
-            fill="#161616"
-            stroke="#2e2e2e"
+            fill="#141414"
+            stroke="#262626"
             strokeWidth="0.5"
           />
-          <path d="M6 1.5 L10.5 6 L6 10.5 L1.5 6 Z" fill="#1c1c1c" />
-          <path d="M6 0 L12 6 L6 6 Z" fill="#262626" opacity="0.4" />
-          <path d="M6 6 L12 6 L6 12 Z" fill="#0a0a0a" opacity="0.5" />
+          <path d="M6 1.5 L10.5 6 L6 10.5 L1.5 6 Z" fill="#181818" />
+          <path d="M6 0 L12 6 L6 6 Z" fill="#1f1f1f" opacity="0.35" />
+          <path d="M6 6 L12 6 L6 12 Z" fill="#080808" opacity="0.45" />
           <g transform="translate(12, 6)">
             <path
               d="M6 0 L12 6 L6 12 L0 6 Z"
-              fill="#131313"
-              stroke="#282828"
+              fill="#111111"
+              stroke="#222222"
               strokeWidth="0.5"
             />
-            <path d="M6 1.5 L10.5 6 L6 10.5 L1.5 6 Z" fill="#191919" />
-            <path d="M6 0 L12 6 L6 6 Z" fill="#232323" opacity="0.35" />
-            <path d="M6 6 L12 6 L6 12 Z" fill="#080808" opacity="0.45" />
+            <path d="M6 1.5 L10.5 6 L6 10.5 L1.5 6 Z" fill="#161616" />
+            <path d="M6 0 L12 6 L6 6 Z" fill="#1c1c1c" opacity="0.3" />
+            <path d="M6 6 L12 6 L6 12 Z" fill="#060606" opacity="0.4" />
           </g>
         </pattern>
 
         <motion.radialGradient
           id="mz5-vignette-mask-grad"
           cx="50%"
-          r="78%"
+          r="85%"
           cy={vignetteCy}
         >
-          <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-          <stop offset="48%" stopColor="#ffffff" stopOpacity="0.72" />
-          <stop offset="72%" stopColor="#ffffff" stopOpacity="0.28" />
-          <stop offset="100%" stopColor="#000000" stopOpacity="0" />
+          <stop offset="0%" stopColor="#ffffff" stopOpacity="0.55" />
+          <stop offset="45%" stopColor="#ffffff" stopOpacity="0.35" />
+          <stop offset="100%" stopColor="#000000" stopOpacity="0.15" />
         </motion.radialGradient>
 
         <mask id="mz5-vignette-mask">
@@ -98,34 +96,46 @@ export function ScrollVectorBackground() {
 
   const textureOpacity = useTransform(
     smoothProgress,
-    [0, 0.35, 0.7, 1],
-    [0.72, 0.88, 0.8, 0.65]
+    [0, 0.5, 1],
+    [0.38, 0.42, 0.36]
   );
 
-  const patternY = useTransform(smoothProgress, [0, 1], ["0%", "-12%"]);
+  const patternY = useTransform(smoothProgress, [0, 1], ["0%", "-8%"]);
 
   const vignetteCy = useTransform(
     smoothProgress,
     [0, 0.5, 1],
-    ["38%", "48%", "58%"]
+    ["42%", "50%", "56%"]
   );
 
-  const centerGlow = useTransform(
+  /** Subtle accent only — stays dark so white text stays readable */
+  const accentGlow = useTransform(
     smoothProgress,
     [0, 0.45, 1],
     [
-      "radial-gradient(ellipse 75% 55% at 50% 38%, rgba(38,38,38,0.45) 0%, transparent 68%)",
-      "radial-gradient(ellipse 70% 50% at 52% 45%, rgba(255,122,80,0.08) 0%, transparent 70%)",
-      "radial-gradient(ellipse 65% 45% at 50% 52%, rgba(28,28,28,0.35) 0%, transparent 72%)",
+      "radial-gradient(ellipse 80% 50% at 50% 0%, rgba(255,122,80,0.07) 0%, transparent 65%)",
+      "radial-gradient(ellipse 70% 45% at 55% 35%, rgba(255,122,80,0.05) 0%, transparent 70%)",
+      "radial-gradient(ellipse 75% 50% at 48% 60%, rgba(255,122,80,0.04) 0%, transparent 72%)",
     ]
   );
 
-  const edgeFade = useTransform(
+  /** Darkens slightly on scroll instead of washing the page lighter */
+  const scrollShade = useTransform(
+    smoothProgress,
+    [0, 0.5, 1],
+    [
+      "rgba(0, 0, 0, 0.42)",
+      "rgba(0, 0, 0, 0.5)",
+      "rgba(0, 0, 0, 0.55)",
+    ]
+  );
+
+  const edgeVignette = useTransform(
     smoothProgress,
     [0, 1],
     [
-      "radial-gradient(ellipse 95% 85% at 50% 50%, transparent 35%, rgba(0,0,0,0.85) 100%)",
-      "radial-gradient(ellipse 100% 90% at 50% 55%, transparent 30%, rgba(0,0,0,0.92) 100%)",
+      "radial-gradient(ellipse 110% 95% at 50% 50%, transparent 25%, rgba(0,0,0,0.75) 100%)",
+      "radial-gradient(ellipse 115% 100% at 50% 52%, transparent 20%, rgba(0,0,0,0.82) 100%)",
     ]
   );
 
@@ -133,9 +143,9 @@ export function ScrollVectorBackground() {
     smoothProgress,
     [0, 0.5, 1],
     [
-      "rgba(255, 122, 80, 0.06)",
-      "rgba(255, 122, 80, 0.1)",
-      "rgba(161, 161, 170, 0.05)",
+      "rgba(255, 122, 80, 0.05)",
+      "rgba(255, 122, 80, 0.07)",
+      "rgba(255, 122, 80, 0.04)",
     ]
   );
 
@@ -146,14 +156,14 @@ export function ScrollVectorBackground() {
         className="pointer-events-none fixed inset-0 z-0 overflow-hidden bg-black"
       >
         <div
-          className="absolute inset-0 opacity-[0.75]"
+          className="absolute inset-0 opacity-[0.4]"
           style={{
             backgroundImage: "url(/textured-diamond-weave.svg)",
             backgroundSize: "24px 12px",
           }}
         />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_40%,rgba(40,40,40,0.35),transparent_70%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_100%_100%_at_50%_50%,transparent_40%,rgba(0,0,0,0.9))]" />
+        <div className="absolute inset-0 bg-black/55" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_100%_100%_at_50%_50%,transparent_30%,rgba(0,0,0,0.85))]" />
       </div>
     );
   }
@@ -169,15 +179,19 @@ export function ScrollVectorBackground() {
         vignetteCy={vignetteCy}
       />
 
-      <motion.div className="absolute inset-0" style={{ background: centerGlow }} />
-      <motion.div className="absolute inset-0" style={{ background: edgeFade }} />
+      <motion.div className="absolute inset-0" style={{ background: accentGlow }} />
+      <motion.div
+        className="absolute inset-0"
+        style={{ backgroundColor: scrollShade }}
+      />
+      <motion.div className="absolute inset-0" style={{ background: edgeVignette }} />
 
       <motion.div
         className="absolute inset-x-0 top-0 h-px"
         style={{ backgroundColor: accentLine }}
       />
 
-      <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black via-black/80 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black via-black/90 to-transparent" />
     </div>
   );
 }
