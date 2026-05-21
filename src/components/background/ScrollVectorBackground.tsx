@@ -6,6 +6,7 @@ import {
   useScroll,
   useSpring,
   useTransform,
+  type MotionValue,
 } from "framer-motion";
 
 const PATTERN_ID = "mz5-diamond-weave";
@@ -16,10 +17,10 @@ function DiamondWeavePattern({
   vignetteCy,
   patternScale,
 }: {
-  opacity: motion.MotionValue<number>;
-  patternY: motion.MotionValue<number>;
-  vignetteCy: motion.MotionValue<string>;
-  patternScale: motion.MotionValue<number>;
+  opacity: MotionValue<number>;
+  patternY: MotionValue<string>;
+  vignetteCy: MotionValue<string>;
+  patternScale: MotionValue<number>;
 }) {
   return (
     <motion.svg
