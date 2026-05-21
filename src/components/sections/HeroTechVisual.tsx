@@ -67,7 +67,7 @@ function FloatingBadge({
   icon: typeof Code2;
   className: string;
   delay: number;
-  float: { y: number[]; x: number[] };
+  float: { y: readonly number[]; x: readonly number[] };
   reduced: boolean;
 }) {
   return (
@@ -78,7 +78,9 @@ function FloatingBadge({
       transition={{ duration: 0.5, delay: 0.3 + delay }}
     >
       <motion.div
-        animate={reduced ? undefined : float}
+        animate={
+          reduced ? undefined : { y: [...float.y], x: [...float.x] }
+        }
         transition={
           reduced
             ? undefined

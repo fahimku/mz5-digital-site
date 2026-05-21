@@ -32,10 +32,10 @@ export function Header() {
         <Logo />
 
         <nav
-          className="hidden md:flex md:flex-1 md:items-center md:justify-center md:px-6"
+          className="hidden md:flex md:flex-1 md:items-center md:justify-center"
           aria-label="Main"
         >
-          <ul className="flex items-center gap-x-6 lg:gap-x-8">
+          <ul className="flex items-center gap-x-0.5 lg:gap-x-1">
             <li className="flex items-center">
               <NavDropdown label="Marketing" items={marketingLinks} />
             </li>
