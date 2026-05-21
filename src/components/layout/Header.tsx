@@ -7,6 +7,7 @@ import { Logo } from "@/components/ui/Logo";
 import { Container } from "@/components/ui/Container";
 import { MobileNav } from "@/components/layout/MobileNav";
 import { NavDropdown } from "@/components/layout/NavDropdown";
+import { navItemClass } from "@/components/layout/nav-styles";
 import { aiLinks, marketingLinks, navLinks } from "@/lib/site";
 
 export function Header() {
@@ -30,21 +31,28 @@ export function Header() {
       <Container className="flex h-16 items-center justify-between lg:h-[72px]">
         <Logo />
 
-        <nav className="hidden items-center gap-8 md:flex">
-          <NavDropdown label="Marketing" items={marketingLinks} />
-          <NavDropdown label="AI" items={aiLinks} />
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="text-sm text-muted transition-colors hover:text-white"
-            >
-              {link.label}
-            </Link>
-          ))}
+        <nav
+          className="hidden md:flex md:flex-1 md:items-center md:justify-center md:px-6"
+          aria-label="Main"
+        >
+          <ul className="flex items-center gap-x-6 lg:gap-x-8">
+            <li className="flex items-center">
+              <NavDropdown label="Marketing" items={marketingLinks} />
+            </li>
+            <li className="flex items-center">
+              <NavDropdown label="AI" items={aiLinks} />
+            </li>
+            {navLinks.map((link) => (
+              <li key={link.href} className="flex items-center">
+                <Link href={link.href} className={navItemClass}>
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="flex shrink-0 items-center gap-3">
           <Button
             href="/#contact"
             variant="primary"

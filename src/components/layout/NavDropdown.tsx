@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { navItemActiveClass, navItemClass } from "@/components/layout/nav-styles";
 
 export type NavDropdownItem = {
   label: string;
@@ -31,21 +32,18 @@ export function NavDropdown({ label, items }: NavDropdownProps) {
   }, []);
 
   return (
-    <div ref={ref} className="relative">
+    <div ref={ref} className="relative flex items-center">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className={`flex items-center gap-1 rounded-lg px-2 py-1 text-sm transition-colors ${
-          open
-            ? "bg-white/10 text-white"
-            : "text-muted hover:text-white"
-        }`}
+        className={`${navItemClass} ${open ? navItemActiveClass : ""}`}
         aria-expanded={open}
         aria-haspopup="true"
       >
-        {label}
+        <span>{label}</span>
         <ChevronDown
-          className={`h-4 w-4 transition-transform duration-300 ${open ? "rotate-180" : ""}`}
+          className={`h-3.5 w-3.5 shrink-0 opacity-70 transition-transform duration-300 ${open ? "rotate-180" : ""}`}
+          aria-hidden
         />
       </button>
 
@@ -56,7 +54,7 @@ export function NavDropdown({ label, items }: NavDropdownProps) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.98 }}
             transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
-            className="absolute top-full left-0 z-50 mt-3 min-w-[240px] overflow-hidden rounded-xl border border-white/10 bg-zinc-950/95 p-2 shadow-2xl backdrop-blur-md"
+            className="absolute top-full left-0 z-50 mt-2 min-w-[240px] overflow-hidden rounded-xl border border-white/10 bg-zinc-950/95 p-2 shadow-2xl backdrop-blur-md"
           >
             {items.map((item, i) => (
               <motion.div
